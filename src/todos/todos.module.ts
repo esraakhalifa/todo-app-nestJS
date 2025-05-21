@@ -1,21 +1,14 @@
-import {
-  Module,
-  NestModule,
-  MiddlewareConsumer,
-  RequestMethod,
-} from '@nestjs/common';
+import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 import { TodosService } from './todos.service';
 import { TodosController } from './todos.controller';
-import { LoggerMiddleware } from './middlewares/logger.middleware';
+import { Todo, TodoSchema } from './schemas/todo.schema';
 
 @Module({
+  imports: [
+    MongooseModule.forFeature([{ name: Todo.name, schema: TodoSchema }]),
+  ],
   controllers: [TodosController],
   providers: [TodosService],
 })
-export class TodoModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(LoggerMiddleware)
-      .forRoutes({ path: 'todos', method: RequestMethod.POST });
-  }
-}
+export class TodoModule {}
